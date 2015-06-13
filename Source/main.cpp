@@ -1,7 +1,3 @@
-#pragma once
-
-#include <opencv2/opencv.hpp>
-#include "CIMUInterface.h"
 /**
  * author:		J. Neilan
  * email:		jimbolysses@gmail.com
@@ -35,34 +31,13 @@
  * 	
  * 
  */
-#include <pthread.h>
+#include "CFusionNode.h"
 
-struct TKalmanMatrices
-{
+int main( int argc, char** argv )
+{	
+	CFusionNode *fusionNode = new CFusionNode();
 	
-};
-
-class CFusionNode
-{
-public:
-		CFusionNode();
-		virtual ~CFusionNode();
-		
-		// Attributes
-		CIMUInterface			*m_pImuInterface;
-		bool					m_isDone;
-		TKalmanMatrices			m_matrices;
-		
-		// Methods
-		void Run();
-		void HandleSignal( int signal );
+	fusionNode->run();
 	
-private:
-		// Attributes
-		phtread_t				m_tNode;
-		cv::KalmanFilter		*m_pFilter;
-		
-		// Methods
-		
-	
-};
+	return 0;	
+}

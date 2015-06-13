@@ -97,7 +97,7 @@ DEPS    = $(RTIMULIBPATH)/RTMath.h \
     $(RTIMULIBPATH)/IMUDrivers/RTPressureMS5611.h \
     $(RTIMULIBPATH)/IMUDrivers/RTPressureMS5637.h 
 
-OBJECTS = Source/CFusionNode.o \
+OBJECTS = Source/main.o \
     objects/RTMath.o \
     objects/RTIMUHal.o \
     objects/RTFusion.o \
@@ -123,7 +123,7 @@ OBJECTS = Source/CFusionNode.o \
     objects/RTPressureMS5611.o \
     objects/RTPressureMS5637.o 
 
-MAKE_TARGET	= CFusionNode
+MAKE_TARGET	= FusionNode
 DESTDIR		= Output/
 TARGET		= Output/$(MAKE_TARGET)
 
