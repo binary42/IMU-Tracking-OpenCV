@@ -1,1 +1,3 @@
 # IMU-Tracking-OpenCV
+
+Under construction. Nothing is in a usable state...
