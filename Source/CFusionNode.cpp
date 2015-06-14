@@ -33,7 +33,7 @@
  */
 #include "CFusionNode.h"
 
-void* RunFusionThread( CFusionNode *fusionNode_in )
+void* RunFusionThread( void *fusionNode_in )
 {
 	CFusionNode *fusion = (CFusionNode*)fusionNode_in;
 	
@@ -49,7 +49,7 @@ void* RunFusionThread( CFusionNode *fusionNode_in )
 
 CFusionNode::CFusionNode() : m_isDone( false )
 {
-	m_pImuInterfac = new CIMUInterface();
+	m_pImuInterface = new CIMUInterface();
 	
 	m_matrices = {};
 }
@@ -59,22 +59,21 @@ CFusionNode::~CFusionNode()
 	delete( m_pImuInterface );
 }
 
-CFusionNode::Run()
+void CFusionNode::Run()
 {
-	signal( SIGINT, HandleSignal );
+	//signal( SIGINT, HandleSignal );
 	
 	int ret = pthread_create( &m_tNode, nullptr, RunFusionThread, (void*)this );
 	
 	if( ret )
 	{
 		std::cout << "Error creating fusion thread. Exiting." << std::endl;
-		return -1;
 	}
 	
-	phtread_exit( nullptr );
+	pthread_exit( nullptr );
 }
 
-CFusionNode::HandleSignal( int signal )
+void CFusionNode::HandleSignal( int signal )
 {
 	m_isDone = true;
 }

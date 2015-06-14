@@ -37,7 +37,7 @@ int main( int argc, char** argv )
 {	
 	CFusionNode *fusionNode = new CFusionNode();
 	
-	fusionNode->run();
+	fusionNode->Run();
 	
 	return 0;	
 }

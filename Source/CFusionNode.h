@@ -36,6 +36,7 @@
  * 
  */
 #include <pthread.h>
+#include <signal.h>
 
 struct TKalmanMatrices
 {
@@ -59,7 +60,7 @@ public:
 	
 private:
 		// Attributes
-		phtread_t				m_tNode;
+		pthread_t				m_tNode;
 		cv::KalmanFilter		*m_pFilter;
 		
 		// Methods

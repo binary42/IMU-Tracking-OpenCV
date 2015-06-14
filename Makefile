@@ -98,6 +98,8 @@ DEPS    = $(RTIMULIBPATH)/RTMath.h \
     $(RTIMULIBPATH)/IMUDrivers/RTPressureMS5637.h 
 
 OBJECTS = Source/main.o \
+		  Source/CFusionNode.o \
+		  Source/CIMUInterface.o \
     objects/RTMath.o \
     objects/RTIMUHal.o \
     objects/RTFusion.o \
