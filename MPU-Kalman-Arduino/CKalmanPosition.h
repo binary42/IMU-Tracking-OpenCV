@@ -41,10 +41,8 @@
 class CKalmanPosition
 {
 public:
-  CKalmanPosition();
-  ~CKalmanPosition();
-
-  
+  CKalmanPosition() = default;
+  virtual ~CKalmanPosition() = default;
 
   // Methods
   void Init( float dtIn );
@@ -71,7 +69,7 @@ private:
 	float 	m_xTempEst[6];
 	float 	m_xEst[6];
 	float 	m_zMeasured[4];
-	float		m_zReal[4];
+	float	m_zReal[4];
 
 	float 	m_sumErrorKalman;
 	float 	m_sumErrorMeasure;

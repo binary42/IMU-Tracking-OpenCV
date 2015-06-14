@@ -35,15 +35,22 @@
 
 void* RunFusionThread( void *fusionNode_in )
 {
+	int deltaT = 0.03; //30ms
+	
 	CFusionNode *fusion = (CFusionNode*)fusionNode_in;
 	
 	while( !fusion->m_isDone )
 	{
 		// Get IMU, run filter, display track
+		fusion->m_pFilter2->Prediction();
+		fusion->m_pFilter2->CalcKalmanGain();
+		fusion->GetVelocities( MPU.m_calAccel, deltaT );
+		fusion->m_pFitler2->Measure( 1.0, fusion->m_matrices.m_V[0], fusion->m_matrices.m_V[1],
+								fusion->m_matrices.m_V[2], fusion->m_MPU.fusedEulerPose[0],
+								fusion->m_MPU.fusedEulerPose[1], fusion->m_MPU.fusedEulerPose[2] );
 		
 		
-		
-		usleep( 30000 ); //30ms read delay for Kalman filter
+		usleep( ( 0.03 * 1000000 ) ); //30ms read delay for Kalman filter
 	}
 	
 	// close all windows and additional threads
@@ -54,13 +61,19 @@ void* RunFusionThread( void *fusionNode_in )
 CFusionNode::CFusionNode() : m_isDone( false )
 {
 	m_pImuInterface = new CIMUInterface();
+
+	m_pFilter1 = new cv::KalmanFilter();
 	
-	m_matrices = {};
+	m_pFilter2 = new CKalmanPosition();
+	
+	m_matrices.m_V = {};
 }
 
 CFusionNode::~CFusionNode()
 {
 	delete( m_pImuInterface );
+	delete( m_pFilter1 );
+	delete( m_pFilter2 );
 }
 
 void CFusionNode::Run()
@@ -80,4 +93,28 @@ void CFusionNode::Run()
 void CFusionNode::HandleSignal( int sig )
 {
 	m_isDone = true;
+}
+
+void CFusionNode::SetVelocities( short *vect, int deltaT )
+{
+	for( int i = 0; i < vect->size(); ++i )
+	{
+		m_matrices.m_V[i] = (float)vec[i] * deltaT;
+	}
+}
+
+std::ostream &operator<<( std::ostream &strm, const CFusionNode &node )
+{
+	//strm << "Filter(s) return values:" << strm::endl;
+	
+	//if( node.filter1 != nullptr )
+	//{
+	//	strm << node.m_pFitler1->m_xEst[0] << " " << node.m_pFilter1->m_xEst[1] << strm::endl;
+	//}
+	//if( node.filter1 != nullptr )
+	//{
+	//	strm << node.m_pFitler2->m_xEst[0] << " " << node.m_pFilter2->m_xEst[1] << strm::endl;
+	//}
+	
+	return strm;
 }

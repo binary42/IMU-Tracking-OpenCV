@@ -1,15 +1,13 @@
 #include "CKalmanPosition.h"
 
-CKalmanPosition::CKalmanPosition() //: m_dt( 0.02f ), m_xEstLast( 0.0f )
-		//, m_zMeasured( 0.0f ), m_xTempEst( 0.0f )
-		//, m_xEst( 0.0f ), m_zReal( 0.0), m_sumErrorKalman( 0.0f )
-		//, m_sumErrorMeasure( 0.0f )
+CKalmanPosition::CKalmanPosition()
 {
 
 }
 
 CKalmanPosition::~CKalmanPosition()
 {
+	
 }
 
 void CKalmanPosition::Init( float dtIn )

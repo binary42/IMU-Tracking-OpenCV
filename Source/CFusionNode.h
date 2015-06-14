@@ -38,10 +38,11 @@
 
 #include <pthread.h>
 #include <signal.h>
+#include <iostream>
 
-struct TKalmanMatrices
+struct TMatrices
 {
-	
+	float m_V[3];
 };
 
 class CFusionNode
@@ -53,16 +54,20 @@ public:
 		// Attributes
 		CIMUInterface			*m_pImuInterface;
 		bool					m_isDone;
-		TKalmanMatrices			m_matrices;
-		
+		TMatrices				m_matrices;
+
 		// Methods
 		void Run();
 		void HandleSignal( int signal );
-	
+		void SetVelocities( short *vect, int deltaT );
+		
+		friend std::ostream &operator<<( std::ostream &strm, const CFusionNode &node );
+		
 private:
 		// Attributes
 		pthread_t				m_tNode;
-		cv::KalmanFilter		*m_pFilter;
+		cv::KalmanFilter		*m_pFilter1;
+		CKalmanPosition			*m_pFilter2;
 		
 		// Methods
 		
