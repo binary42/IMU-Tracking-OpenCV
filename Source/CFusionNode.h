@@ -1,7 +1,4 @@
 #pragma once
-
-#include <opencv2/opencv.hpp>
-#include "CIMUInterface.h"
 /**
  * author:		J. Neilan
  * email:		jimbolysses@gmail.com
@@ -35,6 +32,10 @@
  * 	
  * 
  */
+#include <opencv2/opencv.hpp>
+#include "CIMUInterface.h"
+#include "MPU-Kalman-Arduino/CKalman.h"
+
 #include <pthread.h>
 #include <signal.h>
 

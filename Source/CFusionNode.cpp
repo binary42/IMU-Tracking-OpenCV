@@ -40,6 +40,10 @@ void* RunFusionThread( void *fusionNode_in )
 	while( !fusion->m_isDone )
 	{
 		// Get IMU, run filter, display track
+		
+		
+		
+		usleep( 30000 ); //30ms read delay for Kalman filter
 	}
 	
 	// close all windows and additional threads
@@ -61,7 +65,7 @@ CFusionNode::~CFusionNode()
 
 void CFusionNode::Run()
 {
-	//signal( SIGINT, HandleSignal );
+	//signal( SIGINT, CFusionNode::HandleSignal );
 	
 	int ret = pthread_create( &m_tNode, nullptr, RunFusionThread, (void*)this );
 	
@@ -73,7 +77,7 @@ void CFusionNode::Run()
 	pthread_exit( nullptr );
 }
 
-void CFusionNode::HandleSignal( int signal )
+void CFusionNode::HandleSignal( int sig )
 {
 	m_isDone = true;
 }
