@@ -12,7 +12,7 @@ class MatrixMath
 {
 public:
 	//MatrixMath();
-	void Print(float* A, int m, int n, String label);
+	void Print(float* A, int m, int n, std::string label);
 	void Copy(float* A, int n, int m, float* B);
 	void Multiply(float* A, float* B, int m, int p, int n, float* C);
 	void Add(float* A, float* B, int m, int n, float* C);

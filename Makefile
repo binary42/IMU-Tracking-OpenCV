@@ -100,6 +100,8 @@ DEPS    = $(RTIMULIBPATH)/RTMath.h \
 OBJECTS = Source/main.o \
 		  Source/CFusionNode.o \
 		  Source/CIMUInterface.o \
+		  MPU-Kalman-Arduino/CKalmanPosition.o \
+		  MPU-Kalman-Arduino/MatrixMath.o \
     objects/RTMath.o \
     objects/RTIMUHal.o \
     objects/RTFusion.o \

@@ -34,7 +34,7 @@
  */
 #include <opencv2/opencv.hpp>
 #include "CIMUInterface.h"
-#include "MPU-Kalman-Arduino/CKalman.h"
+#include "../MPU-Kalman-Arduino/CKalmanPosition.h"
 
 #include <pthread.h>
 #include <signal.h>
