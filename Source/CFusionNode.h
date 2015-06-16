@@ -55,21 +55,22 @@ public:
 		CIMUInterface			*m_pImuInterface;
 		bool					m_isDone;
 		TMatrices				m_matrices;
+		cv::KalmanFilter		*m_pFilter1;
+		CKalmanPosition			*m_pFilter2;
+		RTIMU_DATA				m_imuData;
+
 
 		// Methods
 		void Run();
 		void HandleSignal( int signal );
-		void SetVelocities( short *vect, int deltaT );
+		void SetVelocities( const RTVector3 &vect, int deltaT );
+		void Print();
 		
 		friend std::ostream &operator<<( std::ostream &strm, const CFusionNode &node );
+
 		
+
 private:
-		// Attributes
 		pthread_t				m_tNode;
-		cv::KalmanFilter		*m_pFilter1;
-		CKalmanPosition			*m_pFilter2;
-		
-		// Methods
-		
 	
 };

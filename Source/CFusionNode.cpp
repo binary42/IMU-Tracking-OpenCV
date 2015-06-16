@@ -41,14 +41,19 @@ void* RunFusionThread( void *fusionNode_in )
 	
 	while( !fusion->m_isDone )
 	{
+		fusion->m_imuData = fusion->m_pImuInterface->GetPoseInfo();
+		
 		// Get IMU, run filter, display track
 		fusion->m_pFilter2->Prediction();
 		fusion->m_pFilter2->CalcKalmanGain();
-		fusion->GetVelocities( MPU.m_calAccel, deltaT );
-		fusion->m_pFitler2->Measure( 1.0, fusion->m_matrices.m_V[0], fusion->m_matrices.m_V[1],
-								fusion->m_matrices.m_V[2], fusion->m_MPU.fusedEulerPose[0],
-								fusion->m_MPU.fusedEulerPose[1], fusion->m_MPU.fusedEulerPose[2] );
+		fusion->SetVelocities( fusion->m_imuData.accel, deltaT );
+		fusion->m_pFilter2->Measure( 1.0, fusion->m_matrices.m_V[0], fusion->m_matrices.m_V[1],
+						fusion->m_matrices.m_V[2], fusion->m_imuData.fusionPose.x(),
+						fusion->m_imuData.fusionPose.y(), fusion->m_imuData.fusionPose.z() );
+		fusion->m_pFilter2->Correct();
 		
+		// debug output
+		fusion->Print();
 		
 		usleep( ( 0.03 * 1000000 ) ); //30ms read delay for Kalman filter
 	}
@@ -66,7 +71,6 @@ CFusionNode::CFusionNode() : m_isDone( false )
 	
 	m_pFilter2 = new CKalmanPosition();
 	
-	m_matrices.m_V = {};
 }
 
 CFusionNode::~CFusionNode()
@@ -95,26 +99,32 @@ void CFusionNode::HandleSignal( int sig )
 	m_isDone = true;
 }
 
-void CFusionNode::SetVelocities( short *vect, int deltaT )
+void CFusionNode::SetVelocities( const RTVector3 &vect, int deltaT )
 {
-	for( int i = 0; i < vect->size(); ++i )
+	m_matrices.m_V[0] = (float)vect.x() * deltaT;
+	m_matrices.m_V[1] = (float)vect.y() * deltaT;
+	m_matrices.m_V[2] = (float)vect.z() * deltaT;
+}
+
+void CFusionNode::Print() 
+{
+	if( m_pFilter1 != nullptr )
 	{
-		m_matrices.m_V[i] = (float)vec[i] * deltaT;
+	//	out << "OpenCV Filter: " << out::endl;
+	//	out << "x: " << m_pFilter1->m_xEst[0] << " y: " << m_pFilter1->m_xEst[1] << " z: " 
+	//		<< m_pFilter1->m_xEst[2] << out::endl;
+	}
+	if( m_pFilter2 != nullptr )
+	{
+		std::cout << "HomeGrown Filter: " << std::endl;
+		std::cout << "x: " << m_pFilter2->m_xEst[0] << " y: " << m_pFilter2->m_xEst[1] << " z: " 
+			<< m_pFilter2->m_xEst[2] << std::endl;
 	}
 }
 
 std::ostream &operator<<( std::ostream &strm, const CFusionNode &node )
 {
-	//strm << "Filter(s) return values:" << strm::endl;
-	
-	//if( node.filter1 != nullptr )
-	//{
-	//	strm << node.m_pFitler1->m_xEst[0] << " " << node.m_pFilter1->m_xEst[1] << strm::endl;
-	//}
-	//if( node.filter1 != nullptr )
-	//{
-	//	strm << node.m_pFitler2->m_xEst[0] << " " << node.m_pFilter2->m_xEst[1] << strm::endl;
-	//}
+	//node.Print( strm );
 	
 	return strm;
 }
