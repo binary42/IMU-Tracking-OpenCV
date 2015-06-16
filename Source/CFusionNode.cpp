@@ -53,6 +53,9 @@ void* RunFusionThread( void *fusionNode_in )
 		fusion->m_pFilter2->Correct();
 		
 		// debug output
+		//std::cout << fusion->m_imuData.fusionPose.x() << " " << 
+		//				fusion->m_imuData.fusionPose.y() << " " <<  fusion->m_imuData.fusionPose.z();
+		
 		fusion->Print();
 		
 		usleep( ( 0.03 * 1000000 ) ); //30ms read delay for Kalman filter
@@ -83,6 +86,8 @@ CFusionNode::~CFusionNode()
 void CFusionNode::Run()
 {
 	//signal( SIGINT, CFusionNode::HandleSignal );
+	
+	m_pImuInterface->Setup( 0.02, true, true, true );
 	
 	int ret = pthread_create( &m_tNode, nullptr, RunFusionThread, (void*)this );
 	
