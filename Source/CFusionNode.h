@@ -39,10 +39,42 @@
 #include <pthread.h>
 #include <signal.h>
 #include <iostream>
+#include <math.h>
+#include <stdlib.h>
+#include <stdarg.h>
 
 struct TMatrices
 {
 	float m_V[3];
+	
+	//Opencv matrices
+	float deltaT = 0.030;
+	
+	// Transition Matrix (x, y, z, vx, vy, vz)
+	cv::Mat m_A = ( cv::Mat1f( 6, 6 ) << 1.0, 0.0, 0.0, deltaT,    0.0,    0.0,
+		   0.0, 1.0, 0.0, 0.0,    deltaT,    0.0,
+		   0.0, 0.0, 1.0, 0.0,       0.0, deltaT,
+		   0.0, 0.0, 0.0, 1.0,       0.0,    0.0,
+		   0.0, 0.0, 0.0, 0.0,       1.0,    0.0,
+		   0.0, 0.0, 0.0, 0.0,       0.0,    1.0 );
+	// Measurement Matrix (0, 0, z, vx, vy, vz)
+	cv::Mat m_H = ( cv::Mat1f( 4, 6) << 0, 0, 1, 0, 0, 0,
+		   0, 0, 0, 1, 0, 0,
+		   0, 0, 0, 0, 1, 0,
+		   0, 0, 0, 0, 0, 1 );
+	// Process noise covariance (x, ty, z, vx, vy, vz)
+	cv::Mat m_Q = ( cv::Mat1f( 6, 6 ) << 0.1, 0.0, 0.0, 0.0, 0.0, 0.0,
+		   0.0, 1.0, 0.0, 0.0, 0.0, 0.0,
+		   0.0, 0.0, 0.1, 0.0, 0.0, 0.0,
+		   0.0, 0.0, 0.0, 0.3, 0.0, 0.0,
+		   0.0, 0.0, 0.0, 0.0, 0.3, 0.0,
+		   0.0, 0.0, 0.0, 0.0, 0.0, 0.3 );
+	// Measurement Noise covariance (z, vx, vy, vz)
+	cv::Mat m_R = ( cv::Mat1f( 4, 4 ) << 0.1, 0.0, 0.0, 0.0,
+		   0.0, 0.1, 0.0, 0.0,
+		   0.0, 0.0, 0.05, 0.0,
+		   0.0, 0.0, 0.0, 0.05 );
+	
 };
 
 class CFusionNode
@@ -66,6 +98,8 @@ public:
 		void SetVelocities( const RTVector3 &vect, int deltaT );
 		void Print();
 		
+
+		
 		friend std::ostream &operator<<( std::ostream &strm, const CFusionNode &node );
 
 		
@@ -73,4 +107,5 @@ public:
 private:
 		pthread_t				m_tNode;
 	
+		static void* RunFusionThread( void* fusionNodeIn );
 };
